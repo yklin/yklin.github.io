@@ -3,29 +3,29 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>https://yklin.github.io/articles/hello-world/</loc>
+    <loc>https://yk.surfingstudio.com/articles/hello-world/</loc>
     <lastmod>2019-01-12T11:53:39+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://yklin.github.io/articles/</loc>
-    <lastmod>2019-01-12T11:53:39+08:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://yklin.github.io/categories/</loc>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://yklin.github.io/</loc>
+    <loc>https://yk.surfingstudio.com/articles/</loc>
     <lastmod>2019-01-12T11:53:39+08:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://yklin.github.io/tags/</loc>
+    <loc>https://yk.surfingstudio.com/categories/</loc>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://yk.surfingstudio.com/</loc>
+    <lastmod>2019-01-12T11:53:39+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://yk.surfingstudio.com/tags/</loc>
     <priority>0</priority>
   </url>
   
