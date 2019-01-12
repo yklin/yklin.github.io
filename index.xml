@@ -17,7 +17,7 @@
       <pubDate>Sat, 12 Jan 2019 11:53:39 +0800</pubDate>
       
       <guid>https://yklin.github.io/articles/hello-world/</guid>
-      <description> Hello World This is my first article. Let&amp;rsquo;s try to say hello to everyone.
+      <description> This is my first article. Let&amp;rsquo;s try to say hello to everyone.
 Hello World python example def main(): print(&amp;quot;Hello World&amp;quot;) if __name__ == &amp;quot;__main__&amp;quot;: main()  </description>
     </item>
     
