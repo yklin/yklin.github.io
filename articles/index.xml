@@ -18,7 +18,7 @@
       
       <guid>https://yk.surfingstudio.com/articles/hello-world/</guid>
       <description> This is my first article. Let&amp;rsquo;s try to say hello to everyone.
-Hello World python example def main(): print(&amp;quot;Hello World&amp;quot;) if __name__ == &amp;quot;__main__&amp;quot;: main()  </description>
+Hello World in Python def main(): print(&amp;quot;Hello World&amp;quot;) if __name__ == &amp;quot;__main__&amp;quot;: main()  Hello World in Scala object Hello extends App { println(&amp;quot;Hello World&amp;quot;) }  </description>
     </item>
     
   </channel>
