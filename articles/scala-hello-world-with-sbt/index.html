@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en-us">
+	<head>
+    <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+<meta name="generator" content="Hugo 0.53" />
+<title>Scala Hello World with sbt</title>
+<link rel="shortcut icon" href="https://yk.surfingstudio.com/images/favicon.ico">
+<link rel="stylesheet" href="https://yk.surfingstudio.com/css/style.css">
+<link rel="stylesheet" href="https://yk.surfingstudio.com/css/highlight.css">
+
+
+
+<link rel="stylesheet" href="https://yk.surfingstudio.com/css/monosocialiconsfont.css">
+
+
+
+
+<meta property="og:title" content="Scala Hello World with sbt" />
+<meta property="og:description" content="In this simple tutorial, we will build our first Hello World scala application with sbt.
+Environment setup Here are the environment we use:
+ scala: 2.12.8 sbt: 1.2.8  Create our working space Simply put the file build.sbt into the project directory, sbt will use this directory as base directory.
+$ mkdir hello_world $ cd hello_world $ touch build.sbt  Here, we don&rsquo;t need to edit build.sbt, just keep it empty." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://yk.surfingstudio.com/articles/scala-hello-world-with-sbt/" /><meta property="article:published_time" content="2019-01-17T22:26:24&#43;08:00"/>
+<meta property="article:modified_time" content="2019-01-17T22:26:24&#43;08:00"/>
+
+
+
+<meta itemprop="name" content="Scala Hello World with sbt">
+<meta itemprop="description" content="In this simple tutorial, we will build our first Hello World scala application with sbt.
+Environment setup Here are the environment we use:
+ scala: 2.12.8 sbt: 1.2.8  Create our working space Simply put the file build.sbt into the project directory, sbt will use this directory as base directory.
+$ mkdir hello_world $ cd hello_world $ touch build.sbt  Here, we don&rsquo;t need to edit build.sbt, just keep it empty.">
+
+
+<meta itemprop="datePublished" content="2019-01-17T22:26:24&#43;08:00" />
+<meta itemprop="dateModified" content="2019-01-17T22:26:24&#43;08:00" />
+<meta itemprop="wordCount" content="211">
+
+
+
+<meta itemprop="keywords" content="" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Scala Hello World with sbt"/>
+<meta name="twitter:description" content="In this simple tutorial, we will build our first Hello World scala application with sbt.
+Environment setup Here are the environment we use:
+ scala: 2.12.8 sbt: 1.2.8  Create our working space Simply put the file build.sbt into the project directory, sbt will use this directory as base directory.
+$ mkdir hello_world $ cd hello_world $ touch build.sbt  Here, we don&rsquo;t need to edit build.sbt, just keep it empty."/>
+
+
+    </head>
+<body>
+    <nav class="main-nav">
+	
+		<a href='https://yk.surfingstudio.com/'> <span class="arrow">←</span>Home</a>
+	
+
+	
+
+	
+</nav>
+
+    <section id="wrapper">
+        
+        
+<article class="post">
+    <header>
+        <h1>Scala Hello World with sbt</h1>
+        <h2 class="subtitle"></h2>
+        <h2 class="headline">
+        January 17, 2019
+        <br>
+        
+        </h2>
+    </header>
+    <section id="post-body">
+        
+
+<p>In this simple tutorial, we will build our first <code>Hello World</code> scala
+application with <a href="https://www.scala-sbt.org">sbt</a>.</p>
+
+<h2 id="environment-setup">Environment setup</h2>
+
+<p>Here are the environment we use:</p>
+
+<ul>
+<li>scala: 2.12.8</li>
+<li>sbt: 1.2.8</li>
+</ul>
+
+<h2 id="create-our-working-space">Create our working space</h2>
+
+<p>Simply put the file <code>build.sbt</code> into the project directory, sbt will use
+this directory as <em>base directory</em>.</p>
+
+<pre><code class="language-sh">$ mkdir hello_world
+$ cd hello_world
+$ touch build.sbt
+</code></pre>
+
+<p>Here, we don&rsquo;t need to edit <code>build.sbt</code>, just keep it empty. sbt will use
+default settings for this project.</p>
+
+<p>Now, let&rsquo;s implement our program:</p>
+
+<pre><code class="language-sh">$ mkdir -p src/main/scala/hello
+$ touch src/main/scala/hello/Hello.scala
+</code></pre>
+
+<p>And copy the source code to <code>Hello.scala</code></p>
+
+<pre><code class="language-scala">package hello
+
+object Hello extends App {
+  println(&quot;Hello, sbt&quot;)
+}
+</code></pre>
+
+<h3 id="try-out-sbt-shell">Try out sbt shell:</h3>
+
+<p>By running the command <code>sbt</code> in terminal, we can bring out sbt shell.
+We will run the following two sbt commands in sbt shell to complete our tutorial:</p>
+
+<ol>
+<li><code>compile</code> : to compile our source code</li>
+<li><code>run</code> : to run our program</li>
+</ol>
+
+<pre><code class="language-sh">$ sbt
+sbt:hello_world&gt; compile
+[info] Compiling 1 Scala source to /Users/yikai/tmp/scala/hello_world/target/scala-2.12/classes ...
+[info] Done compiling.
+[success] Total time: 1 s, completed Jan 26, 2019, 8:23:44 PM
+sbt:hello_world&gt; 
+sbt:hello_world&gt; 
+sbt:hello_world&gt; run
+[info] Packaging /Users/yikai/tmp/scala/hello_world/target/scala-2.12/hello_world_2.12-0.1.0-SNAPSHOT.jar ...
+[info] Done packaging.
+[info] Running hello.Hello 
+Hello, sbt
+[success] Total time: 0 s, completed Jan 26, 2019, 8:23:49 PM
+sbt:hello_world&gt; 
+sbt:hello_world&gt; exit
+[info] shutting down server
+</code></pre>
+
+<p>Done.</p>
+
+    </section>
+</article>
+
+<footer id="post-meta" class="clearfix">
+    
+    <img class="avatar" src="https://yk.surfingstudio.com/images/avatar.png">
+    <div>
+        <span class="dark"></span>
+        <span></span>
+    </div>
+    
+    <section id="sharing">
+        <a class="twitter" href="https://twitter.com/intent/tweet?text=https%3a%2f%2fyk.surfingstudio.com%2farticles%2fscala-hello-world-with-sbt%2f - Scala%20Hello%20World%20with%20sbt "><span class="icon-twitter"> tweet</span></a>
+
+<a class="facebook" href="#" onclick="
+    window.open(
+      'https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(location.href),
+      'facebook-share-dialog',
+      'width=626,height=436');
+    return false;"><span class="icon-facebook-rect"> Share</span>
+</a>
+
+    </section>
+</footer>
+
+
+
+<ul id="post-list" class="archive readmore">
+    <h3>Read more</h3>
+
+    
+    
+    
+        <li>
+            <a href="/articles/hello-world/">Hello World<aside class="dates">Jan 12 2019</aside></a>
+        </li>
+    
+</ul>
+
+
+
+        <footer id="footer">
+    
+    <p class="small">
+    
+        © Copyright 2019 
+    
+    </p>
+</footer>
+
+    </section>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="https://yk.surfingstudio.com/js/main.js"></script>
+<script src="https://yk.surfingstudio.com/js/highlight.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+
+
+</body>
+</html>
