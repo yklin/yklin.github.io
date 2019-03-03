@@ -6,15 +6,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 
-<meta name="generator" content="Hugo 0.53" />
+<meta name="generator" content="Hugo 0.54.0" />
 <title>Scala Hello World with sbt</title>
-<link rel="shortcut icon" href="https://yk.surfingstudio.com/images/favicon.ico">
-<link rel="stylesheet" href="https://yk.surfingstudio.com/css/style.css">
-<link rel="stylesheet" href="https://yk.surfingstudio.com/css/highlight.css">
+<link rel="shortcut icon" href="https://yklin.github.io/images/favicon.ico">
+<link rel="stylesheet" href="https://yklin.github.io/css/style.css">
+<link rel="stylesheet" href="https://yklin.github.io/css/highlight.css">
 
 
 
-<link rel="stylesheet" href="https://yk.surfingstudio.com/css/monosocialiconsfont.css">
+<link rel="stylesheet" href="https://yklin.github.io/css/monosocialiconsfont.css">
 
 
 
@@ -23,10 +23,11 @@
 <meta property="og:description" content="In this simple tutorial, we will build our first Hello World scala application with sbt.
 Environment setup Here are the environment we use:
  scala: 2.12.8 sbt: 1.2.8  Create our working space Simply put the file build.sbt into the project directory, sbt will use this directory as base directory.
-$ mkdir hello_world $ cd hello_world $ touch build.sbt  Here, we don&rsquo;t need to edit build.sbt, just keep it empty." />
+$ mkdir hello_world $ cd hello_world $ touch build.sbt  Here, we don’t need to edit build.sbt, just keep it empty." />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://yk.surfingstudio.com/articles/scala-hello-world-with-sbt/" /><meta property="article:published_time" content="2019-01-17T22:26:24&#43;08:00"/>
-<meta property="article:modified_time" content="2019-01-17T22:26:24&#43;08:00"/>
+<meta property="og:url" content="https://yklin.github.io/articles/scala-hello-world-with-sbt/" />
+<meta property="article:published_time" content="2019-01-17T14:43:45&#43;08:00"/>
+<meta property="article:modified_time" content="2019-01-17T14:43:45&#43;08:00"/>
 
 
 
@@ -34,11 +35,11 @@ $ mkdir hello_world $ cd hello_world $ touch build.sbt  Here, we don&rsquo;t nee
 <meta itemprop="description" content="In this simple tutorial, we will build our first Hello World scala application with sbt.
 Environment setup Here are the environment we use:
  scala: 2.12.8 sbt: 1.2.8  Create our working space Simply put the file build.sbt into the project directory, sbt will use this directory as base directory.
-$ mkdir hello_world $ cd hello_world $ touch build.sbt  Here, we don&rsquo;t need to edit build.sbt, just keep it empty.">
+$ mkdir hello_world $ cd hello_world $ touch build.sbt  Here, we don’t need to edit build.sbt, just keep it empty.">
 
 
-<meta itemprop="datePublished" content="2019-01-17T22:26:24&#43;08:00" />
-<meta itemprop="dateModified" content="2019-01-17T22:26:24&#43;08:00" />
+<meta itemprop="datePublished" content="2019-01-17T14:43:45&#43;08:00" />
+<meta itemprop="dateModified" content="2019-01-17T14:43:45&#43;08:00" />
 <meta itemprop="wordCount" content="211">
 
 
@@ -50,14 +51,14 @@ $ mkdir hello_world $ cd hello_world $ touch build.sbt  Here, we don&rsquo;t nee
 <meta name="twitter:description" content="In this simple tutorial, we will build our first Hello World scala application with sbt.
 Environment setup Here are the environment we use:
  scala: 2.12.8 sbt: 1.2.8  Create our working space Simply put the file build.sbt into the project directory, sbt will use this directory as base directory.
-$ mkdir hello_world $ cd hello_world $ touch build.sbt  Here, we don&rsquo;t need to edit build.sbt, just keep it empty."/>
+$ mkdir hello_world $ cd hello_world $ touch build.sbt  Here, we don’t need to edit build.sbt, just keep it empty."/>
 
 
     </head>
 <body>
     <nav class="main-nav">
 	
-		<a href='https://yk.surfingstudio.com/'> <span class="arrow">←</span>Home</a>
+		<a href='https://yklin.github.io/'> <span class="arrow">←</span>Home</a>
 	
 
 	
@@ -81,8 +82,7 @@ $ mkdir hello_world $ cd hello_world $ touch build.sbt  Here, we don&rsquo;t nee
     <section id="post-body">
         
 
-<p>In this simple tutorial, we will build our first <code>Hello World</code> scala
-application with <a href="https://www.scala-sbt.org">sbt</a>.</p>
+<p>In this simple tutorial, we will build our first <code>Hello World</code> scala application with <a href="https://www.scala-sbt.org/">sbt</a>.</p>
 
 <h2 id="environment-setup">Environment setup</h2>
 
@@ -95,18 +95,16 @@ application with <a href="https://www.scala-sbt.org">sbt</a>.</p>
 
 <h2 id="create-our-working-space">Create our working space</h2>
 
-<p>Simply put the file <code>build.sbt</code> into the project directory, sbt will use
-this directory as <em>base directory</em>.</p>
+<p>Simply put the file <code>build.sbt</code> into the project directory, sbt will use this directory as <em>base directory</em>.</p>
 
 <pre><code class="language-sh">$ mkdir hello_world
 $ cd hello_world
 $ touch build.sbt
 </code></pre>
 
-<p>Here, we don&rsquo;t need to edit <code>build.sbt</code>, just keep it empty. sbt will use
-default settings for this project.</p>
+<p>Here, we don’t need to edit <code>build.sbt</code>, just keep it empty. sbt will use default settings for this project.</p>
 
-<p>Now, let&rsquo;s implement our program:</p>
+<p>Now, let’s implement our program:</p>
 
 <pre><code class="language-sh">$ mkdir -p src/main/scala/hello
 $ touch src/main/scala/hello/Hello.scala
@@ -123,8 +121,7 @@ object Hello extends App {
 
 <h3 id="try-out-sbt-shell">Try out sbt shell:</h3>
 
-<p>By running the command <code>sbt</code> in terminal, we can bring out sbt shell.
-We will run the following two sbt commands in sbt shell to complete our tutorial:</p>
+<p>By running the command <code>sbt</code> in terminal, we can bring out sbt shell. We will run the following two sbt commands in sbt shell to complete our tutorial:</p>
 
 <ol>
 <li><code>compile</code> : to compile our source code</li>
@@ -156,14 +153,14 @@ sbt:hello_world&gt; exit
 
 <footer id="post-meta" class="clearfix">
     
-    <img class="avatar" src="https://yk.surfingstudio.com/images/avatar.png">
+    <img class="avatar" src="https://yklin.github.io/images/avatar.png">
     <div>
         <span class="dark"></span>
         <span></span>
     </div>
     
     <section id="sharing">
-        <a class="twitter" href="https://twitter.com/intent/tweet?text=https%3a%2f%2fyk.surfingstudio.com%2farticles%2fscala-hello-world-with-sbt%2f - Scala%20Hello%20World%20with%20sbt "><span class="icon-twitter"> tweet</span></a>
+        <a class="twitter" href="https://twitter.com/intent/tweet?text=https%3a%2f%2fyklin.github.io%2farticles%2fscala-hello-world-with-sbt%2f - Scala%20Hello%20World%20with%20sbt "><span class="icon-twitter"> tweet</span></a>
 
 <a class="facebook" href="#" onclick="
     window.open(
@@ -185,6 +182,10 @@ sbt:hello_world&gt; exit
     
     
         <li>
+            <a href="/articles/automatic-setup-kubernetes-with-kubeadm-by-using-ansible-in-vagrant-environment/">Automatic Setup Kubernetes With Kubeadm by Using Ansible in Vagrant Environment<aside class="dates">Feb 28 2019</aside></a>
+        </li>
+    
+        <li>
             <a href="/articles/hello-world/">Hello World<aside class="dates">Jan 12 2019</aside></a>
         </li>
     
@@ -203,25 +204,12 @@ sbt:hello_world&gt; exit
 
     </section>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-<script src="https://yk.surfingstudio.com/js/main.js"></script>
-<script src="https://yk.surfingstudio.com/js/highlight.js"></script>
+<script src="https://yklin.github.io/js/main.js"></script>
+<script src="https://yklin.github.io/js/highlight.js"></script>
 <script>hljs.initHighlightingOnLoad();</script>
 
 
 
-
-<script type="application/javascript">
-var doNotTrack = false;
-if (!doNotTrack) {
-	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-	ga('create', 'UA-132544409-1', 'auto');
-	
-	ga('send', 'pageview');
-}
-</script>
 
 
 </body>

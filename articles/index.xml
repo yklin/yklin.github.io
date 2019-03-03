@@ -2,35 +2,46 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Articles on My New Hugo Site</title>
-    <link>https://yk.surfingstudio.com/articles/</link>
+    <link>https://yklin.github.io/articles/</link>
     <description>Recent content in Articles on My New Hugo Site</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 17 Jan 2019 22:26:24 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 28 Feb 2019 14:52:21 +0800</lastBuildDate>
     
-	<atom:link href="https://yk.surfingstudio.com/articles/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://yklin.github.io/articles/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>Scala Hello World with sbt</title>
-      <link>https://yk.surfingstudio.com/articles/scala-hello-world-with-sbt/</link>
-      <pubDate>Thu, 17 Jan 2019 22:26:24 +0800</pubDate>
+      <title>Automatic Setup Kubernetes With Kubeadm by Using Ansible in Vagrant Environment</title>
+      <link>https://yklin.github.io/articles/automatic-setup-kubernetes-with-kubeadm-by-using-ansible-in-vagrant-environment/</link>
+      <pubDate>Thu, 28 Feb 2019 14:52:21 +0800</pubDate>
       
-      <guid>https://yk.surfingstudio.com/articles/scala-hello-world-with-sbt/</guid>
+      <guid>https://yklin.github.io/articles/automatic-setup-kubernetes-with-kubeadm-by-using-ansible-in-vagrant-environment/</guid>
+      <description>To learn the knowledge of kubernetes To install a Kubernetes cluster is cumbersome. In order to share the development environment to team members, it is best to setup an automatic solution for everyone. This way we can share the same learning experience and develop on the same base. This script is helpful for further CI/CD as well.
+There are already mature solutions for automatic Kubernetes setup, e.g.:
+ kubespray kop  It is encouraged to dive into the kubespray/kop.</description>
+    </item>
+    
+    <item>
+      <title>Scala Hello World with sbt</title>
+      <link>https://yklin.github.io/articles/scala-hello-world-with-sbt/</link>
+      <pubDate>Thu, 17 Jan 2019 14:43:45 +0800</pubDate>
+      
+      <guid>https://yklin.github.io/articles/scala-hello-world-with-sbt/</guid>
       <description>In this simple tutorial, we will build our first Hello World scala application with sbt.
 Environment setup Here are the environment we use:
  scala: 2.12.8 sbt: 1.2.8  Create our working space Simply put the file build.sbt into the project directory, sbt will use this directory as base directory.
-$ mkdir hello_world $ cd hello_world $ touch build.sbt  Here, we don&amp;rsquo;t need to edit build.sbt, just keep it empty.</description>
+$ mkdir hello_world $ cd hello_world $ touch build.sbt  Here, we don’t need to edit build.sbt, just keep it empty.</description>
     </item>
     
     <item>
       <title>Hello World</title>
-      <link>https://yk.surfingstudio.com/articles/hello-world/</link>
+      <link>https://yklin.github.io/articles/hello-world/</link>
       <pubDate>Sat, 12 Jan 2019 11:53:39 +0800</pubDate>
       
-      <guid>https://yk.surfingstudio.com/articles/hello-world/</guid>
+      <guid>https://yklin.github.io/articles/hello-world/</guid>
       <description> This is my first article. Let&amp;rsquo;s try to say hello to everyone.
-Hello World in Python def main(): print(&amp;quot;Hello World&amp;quot;) if __name__ == &amp;quot;__main__&amp;quot;: main()  Hello World in Scala object Hello extends App { println(&amp;quot;Hello World&amp;quot;) }  </description>
+Hello World python example def main(): print(&amp;quot;Hello World&amp;quot;) if __name__ == &amp;quot;__main__&amp;quot;: main()  </description>
     </item>
     
   </channel>
