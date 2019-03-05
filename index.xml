@@ -6,10 +6,23 @@
     <description>Recent content on My New Hugo Site</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 28 Feb 2019 14:52:21 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 05 Mar 2019 21:07:08 +0800</lastBuildDate>
     
 	<atom:link href="https://yklin.github.io/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Run Apache Spark on Kubernetes</title>
+      <link>https://yklin.github.io/articles/run-apache-spark-on-kubernetes/</link>
+      <pubDate>Tue, 05 Mar 2019 21:07:08 +0800</pubDate>
+      
+      <guid>https://yklin.github.io/articles/run-apache-spark-on-kubernetes/</guid>
+      <description>Apache Spark + Kubernetes Apache Spark can run on clusters managed by Kubernetes.
+In this workshop, I am trying to run Apache Spark on Kubernetes.
+Step by step tutorial Environment  Minikube
+ Java 8, NOT Java 11. If you have Java 11 installed in your local machine, you will encounter this problem:
+   java.lang.IllegalArgumentException: Unsupported class file major version 55  Build our own Apache Spark docker images  Official Apache Spark pre-build version 2.</description>
+    </item>
     
     <item>
       <title>Automatic Setup Kubernetes With Kubeadm by Using Ansible in Vagrant Environment</title>
