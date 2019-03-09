@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en-us">
+	<head>
+    <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+<meta name="generator" content="Hugo 0.54.0" />
+<title>Recommender System With Apache Spark</title>
+<link rel="shortcut icon" href="https://yklin.github.io/images/favicon.ico">
+<link rel="stylesheet" href="https://yklin.github.io/css/style.css">
+<link rel="stylesheet" href="https://yklin.github.io/css/highlight.css">
+
+
+
+<link rel="stylesheet" href="https://yklin.github.io/css/monosocialiconsfont.css">
+
+
+
+
+<meta property="og:title" content="Recommender System With Apache Spark" />
+<meta property="og:description" content="Play with Apache Spark SQL, DataFrames and MLlib In this workshop, I will try to train a recommender system on Apache Spark.
+The data set is downloaded from MovieLens. Please download the ml-20m.zip file.
+We will implement a Spark application, and include sbt to build out project.
+The project architecture:
+. ├── build.sbt ├── data │ ├── README.txt │ ├── genome-scores.csv │ ├── genome-tags.csv │ ├── links.csv │ ├── movies." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://yklin.github.io/articles/recommender-system-with-apache-spark/" />
+<meta property="article:published_time" content="2019-03-09T21:11:30&#43;08:00"/>
+<meta property="article:modified_time" content="2019-03-09T21:11:30&#43;08:00"/>
+
+
+
+<meta itemprop="name" content="Recommender System With Apache Spark">
+<meta itemprop="description" content="Play with Apache Spark SQL, DataFrames and MLlib In this workshop, I will try to train a recommender system on Apache Spark.
+The data set is downloaded from MovieLens. Please download the ml-20m.zip file.
+We will implement a Spark application, and include sbt to build out project.
+The project architecture:
+. ├── build.sbt ├── data │ ├── README.txt │ ├── genome-scores.csv │ ├── genome-tags.csv │ ├── links.csv │ ├── movies.">
+
+
+<meta itemprop="datePublished" content="2019-03-09T21:11:30&#43;08:00" />
+<meta itemprop="dateModified" content="2019-03-09T21:11:30&#43;08:00" />
+<meta itemprop="wordCount" content="818">
+
+
+
+<meta itemprop="keywords" content="" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Recommender System With Apache Spark"/>
+<meta name="twitter:description" content="Play with Apache Spark SQL, DataFrames and MLlib In this workshop, I will try to train a recommender system on Apache Spark.
+The data set is downloaded from MovieLens. Please download the ml-20m.zip file.
+We will implement a Spark application, and include sbt to build out project.
+The project architecture:
+. ├── build.sbt ├── data │ ├── README.txt │ ├── genome-scores.csv │ ├── genome-tags.csv │ ├── links.csv │ ├── movies."/>
+
+
+    </head>
+<body>
+    <nav class="main-nav">
+	
+		<a href='https://yklin.github.io/'> <span class="arrow">←</span>Home</a>
+	
+
+	
+
+	
+</nav>
+
+    <section id="wrapper">
+        
+        
+<article class="post">
+    <header>
+        <h1>Recommender System With Apache Spark</h1>
+        <h2 class="subtitle"></h2>
+        <h2 class="headline">
+        March 9, 2019
+        <br>
+        
+        </h2>
+    </header>
+    <section id="post-body">
+        
+
+<h2 id="play-with-apache-spark-sql-dataframes-and-mllib">Play with Apache Spark SQL, DataFrames and MLlib</h2>
+
+<p>In this workshop, I will try to train a recommender system on Apache Spark.</p>
+
+<p>The data set is downloaded from <a href="https://grouplens.org/datasets/movielens/">MovieLens</a>. Please download the <code>ml-20m.zip</code> file.</p>
+
+<p>We will implement a Spark application, and include <a href="https://www.scala-sbt.org">sbt</a> to build out project.</p>
+
+<p>The project architecture:</p>
+
+<pre><code>.
+├── build.sbt
+├── data
+│   ├── README.txt
+│   ├── genome-scores.csv
+│   ├── genome-tags.csv
+│   ├── links.csv
+│   ├── movies.csv
+│   ├── ratings.csv
+│   └── tags.csv
+├── project
+│   └── build.properties
+└── src
+    └── main
+        └── scala
+            └── RecommendationSystem.scala
+</code></pre>
+
+<h3 id="the-sbt-file-build-sbt">The sbt file: <code>build.sbt</code></h3>
+
+<pre><code>name := &quot;Movie Recommendation&quot;    
+    
+version := &quot;1.0&quot;    
+    
+scalaVersion := &quot;2.11.12&quot;    
+    
+libraryDependencies ++= Seq(    
+&quot;org.apache.spark&quot; %% &quot;spark-core&quot; % &quot;2.4.0&quot;,    
+&quot;org.apache.spark&quot; %% &quot;spark-sql&quot; % &quot;2.4.0&quot;,    
+&quot;org.apache.spark&quot; %% &quot;spark-mllib&quot; % &quot;2.4.0&quot;    
+)    
+</code></pre>
+
+<h3 id="data-folder-data">Data folder: <code>data/</code></h3>
+
+<p>Unarchive <code>ml-20m.zip</code>, and put all the files into <code>data/</code> folder</p>
+
+<h3 id="sbt-properties-file-project-build-properties">sbt properties file: <code>project/build.properties</code></h3>
+
+<pre><code>sbt.version=1.2.8
+</code></pre>
+
+<h3 id="our-main-source-code-src-main-scala-recommendationsystem-scala">Our main source code: <code>src/main/scala/RecommendationSystem.scala</code></h3>
+
+<h4 id="1-initialize-our-spark-session">1. Initialize our spark session.</h4>
+
+<pre><code class="language-scala">    val spark = SparkSession
+      .builder()
+      .appName(&quot;Movie Recommendation&quot;)
+      .getOrCreate()
+</code></pre>
+
+<h4 id="2-read-ratings-csv-file">2. Read <code>ratings.csv</code> file</h4>
+
+<pre><code class="language-scala">    // Read ratings.csv
+    val ratingsFile = &quot;data/ratings.csv&quot;
+    val dfRatings = spark.read.format(&quot;csv&quot;)
+      .option(&quot;header&quot;, true)
+      .load(ratingsFile)     
+      .select(&quot;userId&quot;, &quot;movieId&quot;, &quot;rating&quot;, &quot;timestamp&quot;)
+    println(&quot;First 10 ratings:&quot;)
+    dfRatings.show(10)
+
+</code></pre>
+
+<p>The output will be:</p>
+
+<pre><code>First 10 ratings:
++------+-------+------+----------+
+|userId|movieId|rating| timestamp|
++------+-------+------+----------+
+|     1|      2|   3.5|1112486027|
+|     1|     29|   3.5|1112484676|
+|     1|     32|   3.5|1112484819|
+|     1|     47|   3.5|1112484727|
+|     1|     50|   3.5|1112484580|
+|     1|    112|   3.5|1094785740|
+|     1|    151|   4.0|1094785734|
+|     1|    223|   4.0|1112485573|
+|     1|    253|   4.0|1112484940|
+|     1|    260|   4.0|1112484826|
++------+-------+------+----------+
+only showing top 10 rows
+</code></pre>
+
+<h4 id="3-read-movies-csv-file">3. Read <code>movies.csv</code> file</h4>
+
+<pre><code class="language-scala">   // Read movies.csv
+    val moviesFile = &quot;data/movies.csv&quot;
+    val dfMovies = spark.read.format(&quot;csv&quot;)
+      .option(&quot;header&quot;, &quot;true&quot;)
+      .load(moviesFile)
+      .select(&quot;movieId&quot;, &quot;title&quot;, &quot;genres&quot;)       
+    println(&quot;First 10 movies:&quot;)                
+    dfMovies.show(10)     
+</code></pre>
+
+<p>The output will be:</p>
+
+<pre><code>First 10 movies:
++-------+--------------------+--------------------+
+|movieId|               title|              genres|
++-------+--------------------+--------------------+
+|      1|    Toy Story (1995)|Adventure|Animati...|
+|      2|      Jumanji (1995)|Adventure|Childre...|
+|      3|Grumpier Old Men ...|      Comedy|Romance|
+|      4|Waiting to Exhale...|Comedy|Drama|Romance|
+|      5|Father of the Bri...|              Comedy|
+|      6|         Heat (1995)|Action|Crime|Thri...|
+|      7|      Sabrina (1995)|      Comedy|Romance|
+|      8| Tom and Huck (1995)|  Adventure|Children|
+|      9| Sudden Death (1995)|              Action|
+|     10|    GoldenEye (1995)|Action|Adventure|...|
++-------+--------------------+--------------------+
+only showing top 10 rows
+</code></pre>
+
+<h4 id="4-check-the-number-of-ratings-users-and-movies">4. Check the number of ratings, users and movies</h4>
+
+<pre><code class="language-scala">    // Check number of ratings, users and movies
+    val numRatings = dfRatings.count()
+    val numUsers = dfRatings.select(&quot;userId&quot;).distinct().count()
+    val numMovies = dfRatings.select(&quot;movieId&quot;).distinct().count()
+    println(&quot;There are &quot; + numRatings + &quot; ratings, &quot; + numUsers + &quot; users and &quot; + numMovies + &quot; movies.&quot;)
+    println()
+</code></pre>
+
+<p>The output will be:</p>
+
+<pre><code>There are 20000263 ratings, 138493 users and 26744 movies.
+</code></pre>
+
+<h4 id="5-create-spark-sql-table-ratings-and-movies">5. Create Spark SQL Table, <code>ratings</code> and <code>movies</code></h4>
+
+<pre><code class="language-scala">    // Create Spark SQL Table, &quot;ratings&quot; and &quot;movies&quot;
+    dfRatings.createOrReplaceTempView(&quot;ratings&quot;)
+    dfMovies.createOrReplaceTempView(&quot;movies&quot;)
+</code></pre>
+
+<h4 id="6-using-spark-sql-to-query-the-most-rated-movies-and-show-the-movie-title">6. Using Spark SQL to query the most rated movies, and show the movie title</h4>
+
+<pre><code class="language-scala">    // Using Spark SQL to query the most rated movies, and show the movie title
+    val mostRatedMovies = spark.sql(&quot;&quot;&quot;
+      SELECT movies.title, movie_rates.count
+      FROM (
+        SELECT ratings.movieId, count(distinct userId) as count
+        FROM ratings
+        GROUP BY ratings.movieId
+        ) movie_rates
+      JOIN movies on movie_rates.movieId = movies.movieId
+      ORDER BY movie_rates.count desc
+      &quot;&quot;&quot;)
+    println(&quot;Most Rated Movies:&quot;)
+    mostRatedMovies.show(10)
+</code></pre>
+
+<p>The output will be:</p>
+
+<pre><code>Most Rated Movies:
++--------------------+-----+
+|               title|count|
++--------------------+-----+
+| Pulp Fiction (1994)|67310|
+| Forrest Gump (1994)|66172|
+|Shawshank Redempt...|63366|
+|Silence of the La...|63299|
+|Jurassic Park (1993)|59715|
+|Star Wars: Episod...|54502|
+|   Braveheart (1995)|53769|
+|Terminator 2: Jud...|52244|
+|  Matrix, The (1999)|51334|
+|Schindler's List ...|50054|
++--------------------+-----+
+only showing top 10 rows
+</code></pre>
+
+<h4 id="7-using-spark-sql-to-query-most-active-users">7. Using Spark SQL to query most active users</h4>
+
+<pre><code class="language-scala">    // Using Spark SQL to query most active users
+    val mostActiveUsers = spark.sql(&quot;&quot;&quot;
+      SELECT ratings.userId, count(*) as count
+      FROM ratings 
+      GROUP BY ratings.userId
+      ORDER BY count desc
+      LIMIT 10
+      &quot;&quot;&quot;)
+    println(&quot;Most Active Users:&quot;)
+    mostActiveUsers.show(10)
+</code></pre>
+
+<p>The output will be:</p>
+
+<pre><code>Most Active Users:
++------+-----+
+|userId|count|
++------+-----+
+|118205| 9254|
+|  8405| 7515|
+| 82418| 5646|
+|121535| 5520|
+|125794| 5491|
+| 74142| 5447|
+| 34576| 5356|
+|131904| 5330|
+| 83090| 5169|
+| 59477| 4988|
++------+-----+
+</code></pre>
+
+<h4 id="8-split-data-set-into-training-set-and-test-set-and-convert-them-to-rdd">8. Split data set into training set and test set, and convert them to RDD</h4>
+
+<pre><code class="language-scala">    // Split data set into traning set and test set, and convert them to RDD
+    val splits = dfRatings.randomSplit(Array(0.75, 0.25))
+    val (trainingData, testData) = (splits(0), splits(1))
+
+    val ratingsRDD = trainingData.rdd.map(row =&gt; {
+      val userId = row.getString(0)
+      val movieId = row.getString(1)
+      val ratings = row.getString(2)
+      Rating(userId.toInt, movieId.toInt, ratings.toDouble)
+    })
+
+    val testRDD = testData.rdd.map(row =&gt; {
+      val userId = row.getString(0)
+      val movieId = row.getString(1)
+      val ratings = row.getString(2)
+      Rating(userId.toInt, movieId.toInt, ratings.toDouble)
+    })
+</code></pre>
+
+<h4 id="9-train-als-model">9. Train ALS model</h4>
+
+<pre><code class="language-scala">    // Train ALS model
+    val rank = 20
+    val numIterations = 15
+    val lambda = 0.10
+    val alpha = 1.00
+    val block = -1
+    val seed = 12345L
+    val implicitPrefs = false
+    val model = new ALS().setIterations(numIterations)
+      .setBlocks(block)
+      .setAlpha(alpha)
+      .setLambda(lambda)
+      .setRank(rank)
+      .setSeed(seed)
+      .setImplicitPrefs(implicitPrefs)
+      .run(ratingsRDD)
+
+    println(&quot;Recommended 10 movies for userId: 1&quot;)
+    println(&quot;Rating:(UserID, MovieID, Rating)&quot;)
+    val top10ForUser = model.recommendProducts(1, 10)
+    for (rating &lt;- top10ForUser) {
+      println(rating.toString())
+    }
+
+</code></pre>
+
+<p>The output will be:</p>
+
+<pre><code>Recommended 10 movies for userId: 1
+Rating:(UserID, MovieID, Rating)
+Rating(1,101538,5.070806737056955)
+Rating(1,129536,5.065628721703126)
+Rating(1,98328,4.9614724026715775)
+Rating(1,109887,4.9614724026715775)
+Rating(1,121029,4.946069558801881)
+Rating(1,96631,4.861594363164061)
+Rating(1,72235,4.817519435913144)
+Rating(1,120821,4.81380716704345)
+Rating(1,114070,4.805037748075962)
+Rating(1,112423,4.803970865841697)
+</code></pre>
+
+<h3 id="build-and-run">Build and Run</h3>
+
+<p>You can get this project from my <a href="https://github.com/yklin/play_spark_recommendation_system_with_spark_and_sbt">GitHub repo</a>.</p>
+
+<pre><code class="language-sh">$ sbt package
+$ spark-submit --class &quot;MovieRecommendation&quot; \
+               --master local[4] \
+               --driver-memory 4g \
+               target/scala-2.11/movie-recommendation_2.11-1.0.jar 
+</code></pre>
+
+    </section>
+</article>
+
+<footer id="post-meta" class="clearfix">
+    
+    <img class="avatar" src="https://yklin.github.io/images/avatar.png">
+    <div>
+        <span class="dark"></span>
+        <span></span>
+    </div>
+    
+    <section id="sharing">
+        <a class="twitter" href="https://twitter.com/intent/tweet?text=https%3a%2f%2fyklin.github.io%2farticles%2frecommender-system-with-apache-spark%2f - Recommender%20System%20With%20Apache%20Spark "><span class="icon-twitter"> tweet</span></a>
+
+<a class="facebook" href="#" onclick="
+    window.open(
+      'https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(location.href),
+      'facebook-share-dialog',
+      'width=626,height=436');
+    return false;"><span class="icon-facebook-rect"> Share</span>
+</a>
+
+    </section>
+</footer>
+
+
+
+<ul id="post-list" class="archive readmore">
+    <h3>Read more</h3>
+
+    
+    
+    
+        <li>
+            <a href="/articles/run-apache-spark-on-kubernetes/">Run Apache Spark on Kubernetes<aside class="dates">Mar 5 2019</aside></a>
+        </li>
+    
+        <li>
+            <a href="/articles/automatic-setup-kubernetes-with-kubeadm-by-using-ansible-in-vagrant-environment/">Automatic Setup Kubernetes With Kubeadm by Using Ansible in Vagrant Environment<aside class="dates">Feb 28 2019</aside></a>
+        </li>
+    
+        <li>
+            <a href="/articles/scala-hello-world-with-sbt/">Scala Hello World with sbt<aside class="dates">Jan 17 2019</aside></a>
+        </li>
+    
+        <li>
+            <a href="/articles/hello-world/">Hello World<aside class="dates">Jan 12 2019</aside></a>
+        </li>
+    
+</ul>
+
+
+
+        <footer id="footer">
+    
+    <p class="small">
+    
+        © Copyright 2019 
+    
+    </p>
+</footer>
+
+    </section>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="https://yklin.github.io/js/main.js"></script>
+<script src="https://yklin.github.io/js/highlight.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-132544409-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+
+
+</body>
+</html>

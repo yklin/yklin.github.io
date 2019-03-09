@@ -6,10 +6,23 @@
     <description>Recent content in Articles on My New Hugo Site</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 05 Mar 2019 21:07:08 +0800</lastBuildDate>
+    <lastBuildDate>Sat, 09 Mar 2019 21:11:30 +0800</lastBuildDate>
     
 	<atom:link href="https://yklin.github.io/articles/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Recommender System With Apache Spark</title>
+      <link>https://yklin.github.io/articles/recommender-system-with-apache-spark/</link>
+      <pubDate>Sat, 09 Mar 2019 21:11:30 +0800</pubDate>
+      
+      <guid>https://yklin.github.io/articles/recommender-system-with-apache-spark/</guid>
+      <description>Play with Apache Spark SQL, DataFrames and MLlib In this workshop, I will try to train a recommender system on Apache Spark.
+The data set is downloaded from MovieLens. Please download the ml-20m.zip file.
+We will implement a Spark application, and include sbt to build out project.
+The project architecture:
+. ├── build.sbt ├── data │ ├── README.txt │ ├── genome-scores.csv │ ├── genome-tags.csv │ ├── links.csv │ ├── movies.</description>
+    </item>
     
     <item>
       <title>Run Apache Spark on Kubernetes</title>
