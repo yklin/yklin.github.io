@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Language" content="en">
+    <meta name="color-scheme" content="light dark">
+    
+    
+
+    <meta name="author" content="YK Lin">
+    <meta name="description" content="To learn the knowledge of kubernetes    To install a Kubernetes cluster is cumbersome. In order to share the development environment to team members, it is best to setup an automatic solution for everyone. This way we can share the same learning experience and develop on the same base. This script is helpful for further CI/CD as well.
+There are already mature solutions for automatic Kubernetes setup, e.g.:">
+    <meta name="keywords" content="">
+
+    <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Automatic Setup Kubernetes With Kubeadm by Using Ansible in Vagrant Environment"/>
+<meta name="twitter:description" content="To learn the knowledge of kubernetes    To install a Kubernetes cluster is cumbersome. In order to share the development environment to team members, it is best to setup an automatic solution for everyone. This way we can share the same learning experience and develop on the same base. This script is helpful for further CI/CD as well.
+There are already mature solutions for automatic Kubernetes setup, e.g.:"/>
+
+    <meta property="og:title" content="Automatic Setup Kubernetes With Kubeadm by Using Ansible in Vagrant Environment" />
+<meta property="og:description" content="To learn the knowledge of kubernetes    To install a Kubernetes cluster is cumbersome. In order to share the development environment to team members, it is best to setup an automatic solution for everyone. This way we can share the same learning experience and develop on the same base. This script is helpful for further CI/CD as well.
+There are already mature solutions for automatic Kubernetes setup, e.g.:" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://yklin.github.io/posts/automatic-setup-kubernetes-with-kubeadm-by-using-ansible-in-vagrant-environment/" />
+<meta property="article:published_time" content="2019-02-28T14:52:21+08:00" />
+<meta property="article:modified_time" content="2019-02-28T14:52:21+08:00" />
+
+
+    <title>
+  Automatic Setup Kubernetes With Kubeadm by Using Ansible in Vagrant Environment · My Hugo Site
+</title>
+
+    
+      <link rel="canonical" href="https://yklin.github.io/posts/automatic-setup-kubernetes-with-kubeadm-by-using-ansible-in-vagrant-environment/">
+    
+
+    
+    
+    <link rel="preload" href="/fonts/forkawesome-webfont.woff2?v=1.1.7" as="font" type="font/woff2" integrity="sha256-hEIt6X6xzye8ubyk8/uxjz68cRZHsJxoKS9fQ8idUGQ=" crossorigin>
+
+    
+      
+      
+      <link rel="stylesheet" href="/css/coder.min.ec198d25949ddd79a670b1ead43ca88e0bc2c1343266d0df0a9eeb7f3f207777.css" integrity="sha256-7BmNJZSd3XmmcLHq1DyojgvCwTQyZtDfCp7rfz8gd3c=" crossorigin="anonymous" media="screen" />
+    
+
+    
+
+    
+
+    
+
+    
+
+    <link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+
+    <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+    
+
+    <meta name="generator" content="Hugo 0.78.1" />
+  </head>
+
+  
+  
+  <body class="colorscheme-light"
+        onload=""
+  >
+    
+
+    <main class="wrapper">
+      <nav class="navigation">
+  <section class="container">
+    <a class="navigation-title" href="/">
+      My Hugo Site
+    </a>
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/posts/">Blog</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+      <div class="content">
+        
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">
+            <a class="title-link" href="https://yklin.github.io/posts/automatic-setup-kubernetes-with-kubeadm-by-using-ansible-in-vagrant-environment/">
+              Automatic Setup Kubernetes With Kubeadm by Using Ansible in Vagrant Environment
+            </a>
+          </h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fa fa-calendar" aria-hidden="true"></i>
+              <time datetime='2019-02-28T14:52:21&#43;08:00'>
+                February 28, 2019
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fa fa-clock-o" aria-hidden="true"></i>
+              5-minute read
+            </span>
+          </div>
+          
+          
+          
+        </div>
+      </header>
+
+      <div>
+        
+        <h2 id="to-learn-the-knowledge-of-kubernetes">
+  To learn the knowledge of kubernetes
+  <a class="heading-link" href="#to-learn-the-knowledge-of-kubernetes">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h2>
+<p>To install a Kubernetes cluster is cumbersome. In order to share the development environment to team members, it is best to setup an automatic solution for everyone. This way we can share the same learning experience and develop on the same base. This script is helpful for further CI/CD as well.</p>
+<p>There are already mature solutions for automatic Kubernetes setup, e.g.:</p>
+<ol>
+<li><a href="https://github.com/kubernetes-sigs/kubespray">kubespray</a></li>
+<li><a href="https://github.com/kubernetes/kops">kop</a></li>
+</ol>
+<p>It is encouraged to dive into the kubespray/kop. By writing our own kubernets setup script step by step, we can gain the most knowledge about what kubernetes consist of.</p>
+<h2 id="simplify-the-steps-and-learn-from-kubeadm">
+  Simplify the steps, and learn from kubeadm
+  <a class="heading-link" href="#simplify-the-steps-and-learn-from-kubeadm">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h2>
+<h3 id="environment-setup">
+  Environment setup
+  <a class="heading-link" href="#environment-setup">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<ul>
+<li>Vagrant 2.2.3</li>
+<li>Virtualbox &gt; 6.0</li>
+</ul>
+<p>Everything will be setup automatically by ansible playbook in Vagrant environment, in which we use CentOS7 as our main operation system.</p>
+<h3 id="get-the-automation-scripts">
+  Get the automation scripts
+  <a class="heading-link" href="#get-the-automation-scripts">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>All my source codes are here: <a href="https://github.com/yklin/play_k8s_on_vagrant_with_ansible">play k8s on vagrant with ansible</a>. Let&rsquo;s git clone it:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">git clone https://github.com/yklin/play_k8s_on_vagrant_with_ansible
+cd play_k8s_on_vagrant_with_ansible
+</code></pre></div><p>Next step, the only step is:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">vagrant up
+</code></pre></div><p>You will see the messages in terminal:</p>
+<pre><code>Bringing machine 'k8s-1' up with 'virtualbox' provider...
+Bringing machine 'k8s-2' up with 'virtualbox' provider...
+Bringing machine 'k8s-3' up with 'virtualbox' provider...
+==&gt; k8s-1: Preparing master VM for linked clones...
+    k8s-1: This is a one time operation. Once the master VM is prepared,
+    k8s-1: it will be used as a base for linked clones, making the creation
+    k8s-1: of new VMs take milliseconds on a modern system.
+==&gt; k8s-1: Importing base box 'bento/centos-7.6'...
+==&gt; k8s-1: Cloning VM...
+==&gt; k8s-1: Matching MAC address for NAT networking...
+==&gt; k8s-1: Checking if box 'bento/centos-7.6' version '201812.27.0' is up to date...
+==&gt; k8s-1: Setting the name of the VM: k8s-1
+==&gt; k8s-1: Clearing any previously set network interfaces...
+
+
+... SKIP ...
+
+
+TASK [kubernetes/node : Join to kubernetes cluster] ****************************
+changed: [k8s-2]
+changed: [k8s-3]
+
+TASK [kubernetes/node : Enable and check kubelet service] **********************
+ok: [k8s-2]
+ok: [k8s-3]
+
+PLAY RECAP *********************************************************************
+k8s-1                      : ok=22   changed=7    unreachable=0    failed=0   
+k8s-2                      : ok=19   changed=1    unreachable=0    failed=0   
+k8s-3                      : ok=19   changed=1    unreachable=0    failed=0   
+
+</code></pre><p>If the something goes wrong, you can run again by:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">vagrant provision
+</code></pre></div><p>If everything goes well, in your VirtualBox window you will see that 3 virtual machines are running:</p>
+<p><img src="/assets/k8s-up-and-run.png" alt="k8s dashboard 1"></p>
+<h3 id="explanation">
+  Explanation
+  <a class="heading-link" href="#explanation">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>Here are the procedures:</p>
+<ol>
+<li>We launch the vagrant.</li>
+<li>Vagrant downloads the box (the operating system defined in Vagrantfile).</li>
+<li>After all box is running, the vagrant provision will be triggered. We use <code>ansible</code> for all the reset of jobs to setup kubernetes.</li>
+<li>Ansible playbook will try to install every components we need to run Kubernetes clusters.</li>
+</ol>
+<h4 id="1-vagrantfile">
+  1. Vagrantfile
+  <a class="heading-link" href="#1-vagrantfile">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h4>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby"><span style="color:#66d9ef">Vagrant</span><span style="color:#f92672">.</span>require_version <span style="color:#e6db74">&#34;&gt;= 2.2.0&#34;</span>
+
+$instance_count <span style="color:#f92672">=</span> <span style="color:#ae81ff">3</span>
+$vm_cpus <span style="color:#f92672">=</span> <span style="color:#ae81ff">2</span>
+$vm_memory <span style="color:#f92672">=</span> <span style="color:#ae81ff">2048</span>
+$subnet <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;10.10.10&#34;</span>
+
+
+<span style="color:#66d9ef">Vagrant</span><span style="color:#f92672">.</span>configure(<span style="color:#e6db74">&#34;2&#34;</span>) <span style="color:#66d9ef">do</span> <span style="color:#f92672">|</span>config<span style="color:#f92672">|</span>
+  config<span style="color:#f92672">.</span>vm<span style="color:#f92672">.</span>provider <span style="color:#e6db74">&#34;virtualbox&#34;</span>
+  config<span style="color:#f92672">.</span>vm<span style="color:#f92672">.</span>box <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;bento/centos-7.6&#34;</span>
+
+  (<span style="color:#ae81ff">1</span><span style="color:#f92672">..</span> $instance_count)<span style="color:#f92672">.</span>each <span style="color:#66d9ef">do</span> <span style="color:#f92672">|</span>i<span style="color:#f92672">|</span>
+    name <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;k8s-</span><span style="color:#e6db74">#{</span>i<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>
+    ip <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">#{</span>$subnet<span style="color:#e6db74">}</span><span style="color:#e6db74">.</span><span style="color:#e6db74">#{</span>i<span style="color:#f92672">+</span><span style="color:#ae81ff">10</span><span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>
+    primary <span style="color:#f92672">=</span> i <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span><span style="color:#f92672">?</span> <span style="color:#66d9ef">true</span>: <span style="color:#66d9ef">false</span>
+
+    config<span style="color:#f92672">.</span>vm<span style="color:#f92672">.</span>define <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">#{</span>name<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>, <span style="color:#e6db74">primary</span>: primary <span style="color:#66d9ef">do</span> <span style="color:#f92672">|</span>node<span style="color:#f92672">|</span>
+      node<span style="color:#f92672">.</span>vm<span style="color:#f92672">.</span>hostname <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">#{</span>name<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>
+      node<span style="color:#f92672">.</span>vm<span style="color:#f92672">.</span>network <span style="color:#e6db74">&#34;private_network&#34;</span>, <span style="color:#e6db74">ip</span>: <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">#{</span>ip<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>, <span style="color:#e6db74">auto_config</span>: <span style="color:#66d9ef">true</span>
+
+      config<span style="color:#f92672">.</span>vm<span style="color:#f92672">.</span>provider <span style="color:#e6db74">&#34;virtualbox&#34;</span> <span style="color:#66d9ef">do</span> <span style="color:#f92672">|</span>vb<span style="color:#f92672">|</span>
+        vb<span style="color:#f92672">.</span>name <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">#{</span>name<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>
+        vb<span style="color:#f92672">.</span>gui <span style="color:#f92672">=</span> <span style="color:#66d9ef">false</span>
+        vb<span style="color:#f92672">.</span>memory <span style="color:#f92672">=</span> $vm_memory
+        vb<span style="color:#f92672">.</span>cpus <span style="color:#f92672">=</span> $vm_cpus
+        vb<span style="color:#f92672">.</span>linked_clone <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span>
+      <span style="color:#66d9ef">end</span>
+
+      <span style="color:#66d9ef">if</span> i <span style="color:#f92672">==</span> $instance_count
+        config<span style="color:#f92672">.</span>vm<span style="color:#f92672">.</span>provision <span style="color:#e6db74">&#34;ansible_local&#34;</span> <span style="color:#66d9ef">do</span> <span style="color:#f92672">|</span>ansible<span style="color:#f92672">|</span>
+          ansible<span style="color:#f92672">.</span>playbook <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;playbook.yml&#34;</span>
+          ansible<span style="color:#f92672">.</span>inventory_path <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;inventory/vagrant/hosts.ini&#34;</span>
+          ansible<span style="color:#f92672">.</span>become <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span>
+          ansible<span style="color:#f92672">.</span>limit <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;all&#34;</span>
+          ansible<span style="color:#f92672">.</span>compatibility_mode <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;2.0&#34;</span>
+        <span style="color:#66d9ef">end</span>
+      <span style="color:#66d9ef">end</span>
+    <span style="color:#66d9ef">end</span>
+
+  <span style="color:#66d9ef">end</span>
+
+<span style="color:#66d9ef">end</span>
+</code></pre></div><p>In <code>Vagrantfile</code>,</p>
+<ol>
+<li>We define 3 virtual machines for our kubernetes cluster.</li>
+<li>Each machine has 2 cores of cpu and 2 GB of memory, minimal requirement for kubernetes.</li>
+<li>Each machine has host-only network ip address from <code>10.10.10.11</code> to <code>10.10.10.13</code>.</li>
+<li>We use <code>bento/centos-7.6</code> as our OS runing inside Virtualbox.</li>
+<li>The third machine, <code>k8s-3</code>, will be responsable for runing ansible playbook.</li>
+</ol>
+<h4 id="2-playbookyml">
+  2. playbook.yml
+  <a class="heading-link" href="#2-playbookyml">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h4>
+<pre><code>---
+
+- hosts: k8s-cluster
+  become: true
+  roles:
+    - common
+
+- hosts: masters
+  become: true
+  roles:
+    - kubernetes/master
+
+- hosts: nodes
+  become: true
+  roles:
+    - kubernetes/node
+</code></pre><p>There are 3 roles in this playbook:</p>
+<ol>
+<li>common</li>
+<li>kubernetes/master</li>
+<li>kubernetes/node</li>
+</ol>
+<p>Check out this file, <a href="https://github.com/yklin/play_k8s_on_vagrant_with_ansible/blob/master/inventory/vagrant/hosts.ini"><code>inventory/vagrant/hosts.ini</code></a>, we indicate <code>k8s-1</code> as master, <code>k8s-2</code> and <code>k8s-3</code> as worker nodes.</p>
+<h5 id="1-role-common----rolescommontasksmainymlhttpsgithubcomyklinplay_k8s_on_vagrant_with_ansibleblobmasterrolescommontasksmainyml">
+  1. Role: <code>common</code> -  <a href="https://github.com/yklin/play_k8s_on_vagrant_with_ansible/blob/master/roles/common/tasks/main.yml">roles/common/tasks/main.yml</a>
+  <a class="heading-link" href="#1-role-common----rolescommontasksmainymlhttpsgithubcomyklinplay_k8s_on_vagrant_with_ansibleblobmasterrolescommontasksmainyml">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h5>
+<ol>
+<li>Disable swapfile</li>
+<li>Set bridge-netfilter variables</li>
+<li>Install Docker-CE</li>
+<li>Install Kubernetes</li>
+</ol>
+<h5 id="2-role-master----roleskubernetesmastertasksmainymlhttpsgithubcomyklinplay_k8s_on_vagrant_with_ansibleblobmasterroleskubernetesmastertasksmainyml">
+  2. Role: <code>master</code> -  <a href="https://github.com/yklin/play_k8s_on_vagrant_with_ansible/blob/master/roles/kubernetes/master/tasks/main.yml">roles/kubernetes/master/tasks/main.yml</a>
+  <a class="heading-link" href="#2-role-master----roleskubernetesmastertasksmainymlhttpsgithubcomyklinplay_k8s_on_vagrant_with_ansibleblobmasterroleskubernetesmastertasksmainyml">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h5>
+<ol>
+<li>Initialize kubernetes master</li>
+<li>Copy config file to home dir</li>
+<li>Install <code>flannel</code> network add-on</li>
+<li>Deploy kubernetes dashboard into cluster</li>
+</ol>
+<h5 id="3-role-node----roleskubernetesnodetasksmainymlhttpsgithubcomyklinplay_k8s_on_vagrant_with_ansibleblobmasterroleskubernetesnodetasksmainyml">
+  3. Role: <code>node</code> -  <a href="https://github.com/yklin/play_k8s_on_vagrant_with_ansible/blob/master/roles/kubernetes/node/tasks/main.yml">roles/kubernetes/node/tasks/main.yml</a>
+  <a class="heading-link" href="#3-role-node----roleskubernetesnodetasksmainymlhttpsgithubcomyklinplay_k8s_on_vagrant_with_ansibleblobmasterroleskubernetesnodetasksmainyml">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h5>
+<ol>
+<li>Join to kubernetes cluster</li>
+</ol>
+<h2 id="play-with-k8s">
+  Play with K8s
+  <a class="heading-link" href="#play-with-k8s">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h2>
+<p>Let&rsquo;s play with k8s. First, we need to ssh into the master node:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ vagrant ssh
+Last login: Sun Mar  <span style="color:#ae81ff">3</span> 08:28:19 <span style="color:#ae81ff">2019</span> from 10.10.10.13
+<span style="color:#f92672">[</span>vagrant@k8s-1 ~<span style="color:#f92672">]</span>$ 
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"><span style="color:#f92672">[</span>vagrant@k8s-1 ~<span style="color:#f92672">]</span>$ kubectl get nodes
+NAME    STATUS   ROLES    AGE   VERSION
+k8s-1   Ready    master   10m   v1.13.4
+k8s-2   Ready    &lt;none&gt;   10m   v1.13.4
+k8s-3   Ready    &lt;none&gt;   10m   v1.13.4
+<span style="color:#f92672">[</span>vagrant@k8s-1 ~<span style="color:#f92672">]</span>$
+<span style="color:#f92672">[</span>vagrant@k8s-1 ~<span style="color:#f92672">]</span>$ kubectl get pods --all-namespaces
+NAMESPACE     NAME                                   READY   STATUS    RESTARTS   AGE
+kube-system   coredns-86c58d9df4-tvqvv               1/1     Running   <span style="color:#ae81ff">0</span>          12m
+kube-system   coredns-86c58d9df4-wsgf2               1/1     Running   <span style="color:#ae81ff">0</span>          12m
+kube-system   etcd-k8s-1                             1/1     Running   <span style="color:#ae81ff">0</span>          11m
+kube-system   kube-apiserver-k8s-1                   1/1     Running   <span style="color:#ae81ff">0</span>          11m
+kube-system   kube-controller-manager-k8s-1          1/1     Running   <span style="color:#ae81ff">0</span>          11m
+kube-system   kube-flannel-ds-amd64-8rcbn            1/1     Running   <span style="color:#ae81ff">0</span>          12m
+kube-system   kube-flannel-ds-amd64-l4mgs            1/1     Running   <span style="color:#ae81ff">0</span>          12m
+kube-system   kube-flannel-ds-amd64-xw5x7            1/1     Running   <span style="color:#ae81ff">3</span>          12m
+kube-system   kube-proxy-4vvbf                       1/1     Running   <span style="color:#ae81ff">0</span>          12m
+kube-system   kube-proxy-scpnw                       1/1     Running   <span style="color:#ae81ff">0</span>          12m
+kube-system   kube-proxy-v5t8d                       1/1     Running   <span style="color:#ae81ff">0</span>          12m
+kube-system   kube-scheduler-k8s-1                   1/1     Running   <span style="color:#ae81ff">0</span>          11m
+kube-system   kubernetes-dashboard-57df4db6b-zvpwn   1/1     Running   <span style="color:#ae81ff">0</span>          12m
+
+</code></pre></div><h3 id="kubernetes-dashboard">
+  Kubernetes dashboard
+  <a class="heading-link" href="#kubernetes-dashboard">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<blockquote>
+<p>This is for development only. Don&rsquo;t expose k8s dashboard to the outside world.</p>
+</blockquote>
+<p>Kubernetess dashboard is only accessible in the cluster by default. In order to access it, we have to proxy it. In the vagrant virtual machine,</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"><span style="color:#f92672">[</span>vagrant@k8s-1 ~<span style="color:#f92672">]</span>$ kubectl proxy
+</code></pre></div><p>Now, we have another problem, the kubernetes dashboard only accepts localhost connection. Our kubernetes cluster is runing inside virtual machine, we can do <strong>port-forwarding</strong> to accomplish it. Open virtualbox settings of <code>k8s-1</code> virtual machine, in the <code>Network</code> tab we can add  <code>Port Forwarding</code> in the <code>Advanced</code> section of <code>Adapter 1</code> network interface.</p>
+<p><img src="/assets/k8s-dashboard-virtualbox-port-forwarding.png" alt="k8s dashboard virtualbox port forwarding"></p>
+<p>In <code>Rule 1</code>, we forward the connection from port 8001 of local machine to port 8001 of guest machine.</p>
+<p>Now, open <a href="http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/">http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/</a>, you will see:</p>
+<p><img src="/assets/k8s-login-screen.png" alt="k8s dashboard login screen"></p>
+<p>Refer to this guide, <a href="https://github.com/kubernetes/dashboard/wiki/Creating-sample-user,">https://github.com/kubernetes/dashboard/wiki/Creating-sample-user,</a> we can get the token.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"><span style="color:#f92672">[</span>vagrant@k8s-1 ~<span style="color:#f92672">]</span>$ cd /vagrant
+<span style="color:#f92672">[</span>vagrant@k8s-1 vagrant<span style="color:#f92672">]</span>$ kubectl apply -f admin-user.yml
+serviceaccount/admin-user created
+<span style="color:#f92672">[</span>vagrant@k8s-1 vagrant<span style="color:#f92672">]</span>$ kubectl apply -f admin-user-binding.yml
+clusterrolebinding.rbac.authorization.k8s.io/admin-user created
+<span style="color:#f92672">[</span>vagrant@k8s-1 vagrant<span style="color:#f92672">]</span>$ kubectl -n kube-system describe secret <span style="color:#66d9ef">$(</span>kubectl -n kube-system get secret | grep admin-user | awk <span style="color:#e6db74">&#39;{print $1}&#39;</span><span style="color:#66d9ef">)</span>
+... SKIP ...
+</code></pre></div><p>You will see a label:</p>
+<pre><code>token:      eyJhbGciOiJSUzI1NiIsImtpZCI6IiJ9.eyJpc3MiOiJr...... 
+</code></pre><p>Copy the long token string and paste it into <code>Enter token</code> field on log in screen.</p>
+<p><img src="/assets/k8s-login-screen-with-token.png" alt="k8s login screen with token"></p>
+<p>You are in.</p>
+<p><img src="/assets/k8s-dashboard-1.png" alt="k8s dashboard 1"></p>
+<p><img src="/assets/k8s-dashboard-2.png" alt="k8s dashboard 2"></p>
+<h3 id="cleanup">
+  Cleanup
+  <a class="heading-link" href="#cleanup">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"><span style="color:#f92672">[</span>vagrant@k8s-1 vagrant<span style="color:#f92672">]</span>$ exit
+logout
+Connection to 127.0.0.1 closed.
+$ vagrant destroy -f
+</code></pre></div><h2 id="further-readings">
+  Further Readings
+  <a class="heading-link" href="#further-readings">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h2>
+<ul>
+<li>Kubernetes Web UI - <a href="https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/">https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/</a></li>
+<li>Overview of <code>kubectl</code> - <a href="https://kubernetes.io/docs/reference/kubectl/overview/">https://kubernetes.io/docs/reference/kubectl/overview/</a></li>
+</ul>
+
+      </div>
+
+
+      <footer>
+        
+
+
+        
+        
+        
+      </footer>
+    </article>
+
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [
+          ['$', '$'], ['\\(', '\\)']
+        ],
+        processEscapes: true,
+        processEnvironments: true
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  </script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css"
+    integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
+  
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js"
+    integrity="sha384-g7c+Jr9ZivxKLnZTDUhnkOnsh30B4H0rpLUpJ4jAIKs4fnJI+sEnkvrMWph2EDg4" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/contrib/auto-render.min.js"
+    integrity="sha384-mll67QQFJfxn0IYznZYonOWZ644AWYC+Pt2cHqMaRhXVrursRwvLnLaebdGIlYNa" crossorigin="anonymous"
+    onload="renderMathInElement(document.body,
+      {
+        delimiters: [
+          {left: '$$', right: '$$', display:true},
+          {left: '$', right: '$', display:false},
+          {left: '\\(', right: '\\)', display: false},
+          {left: '\\[', right: '\\]', display: true}
+        ]
+      }
+    );"></script>
+  </section>
+
+      </div>
+
+      
+  <footer class="footer">
+    <section class="container">
+      
+      
+        ©
+        
+        2021
+         YK Lin 
+      
+      
+         · 
+        Powered by <a href="https://gohugo.io/">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/">Coder</a>.
+      
+      
+    </section>
+  </footer>
+
+
+    </main>
+
+    
+
+    
+
+    
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-132544409-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+  </body>
+
+</html>
